@@ -1,13 +1,14 @@
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.ClassNode;
 import ch.uzh.ifi.seal.monolith2microservices.utils.comparators.ClassNodeComparator;
-import org.junit.Before;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by gmazlami on 12/19/16.
@@ -18,10 +19,10 @@ public class ClassNodeTest {
 
     private ClassNode nodeA, nodeC, nodeG;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    public void setUp() {
 
-        //create all nodes
+        // create all nodes
         ClassNode a = new ClassNode("a");
         ClassNode b = new ClassNode("b");
         ClassNode c = new ClassNode("c");
@@ -53,7 +54,7 @@ public class ClassNodeTest {
         g.addNeighborWithWeight(c, 2d);
         g.addNeighborWithWeight(e, 5d);
 
-        ClassNode[] nodeArray = {a,b,c,d,e,f,g};
+        ClassNode[] nodeArray = { a, b, c, d, e, f, g };
         nodes = Arrays.asList(nodeArray);
 
         nodeA = a;
@@ -62,21 +63,21 @@ public class ClassNodeTest {
     }
 
     @Test
-    public void testCombinedWeight(){
+    public void testCombinedWeight() {
         assertEquals(25d, nodeA.getCombinedWeight(), 0.1);
         assertEquals(12d, nodeC.getCombinedWeight(), 0.1);
         assertEquals(14d, nodeG.getCombinedWeight(), 0.1);
     }
 
     @Test
-    public void testDegree(){
+    public void testDegree() {
         assertEquals(4, nodeA.getDegree());
         assertEquals(4, nodeC.getDegree());
         assertEquals(3, nodeG.getDegree());
     }
 
     @Test
-    public void testComparator(){
+    public void testComparator() {
         nodes.sort(new ClassNodeComparator());
         Collections.reverse(nodes);
 

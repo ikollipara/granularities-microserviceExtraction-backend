@@ -2,10 +2,10 @@ package ch.uzh.ifi.seal.monolith2microservices.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 /**
  * Created by gmazlami on 12/15/16.
@@ -31,7 +31,7 @@ public class DecompositionParameters {
 
     private int sizeThreshold;
 
-    public long getId(){
+    public long getId() {
         return id;
     }
 

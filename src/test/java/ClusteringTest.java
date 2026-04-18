@@ -2,13 +2,15 @@ import ch.uzh.ifi.seal.monolith2microservices.graph.MSTGraphClusterer;
 import ch.uzh.ifi.seal.monolith2microservices.models.couplings.BaseCoupling;
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.ClassNode;
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.Component;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by gmazlami on 12/19/16.
@@ -16,7 +18,7 @@ import java.util.Set;
 public class ClusteringTest {
 
     @Test
-    public void testDecompositionWithLargeComponentSplit(){
+    public void testDecompositionWithLargeComponentSplit() {
         // Test Data
         List<BaseCoupling> originalGraph = generateTestGraph();
 
@@ -30,8 +32,7 @@ public class ClusteringTest {
         assertEquals(expectedComponents, computedComponents);
     }
 
-
-    private Set<Component> generateExpectedComponents(){
+    private Set<Component> generateExpectedComponents() {
         Set<Component> components = new HashSet<>();
 
         Component component = new Component();
@@ -71,27 +72,27 @@ public class ClusteringTest {
         return components;
     }
 
-    private List<BaseCoupling> generateTestGraph(){
+    private List<BaseCoupling> generateTestGraph() {
         List<BaseCoupling> graph = new ArrayList<>();
-        graph.add(new BaseCoupling("A","B",7));
-        graph.add(new BaseCoupling("B","C",9));
-        graph.add(new BaseCoupling("C","D",6));
-        graph.add(new BaseCoupling("B","E",8));
-        graph.add(new BaseCoupling("E","F",7));
-        graph.add(new BaseCoupling("F","G",1));
-        graph.add(new BaseCoupling("G","H",7));
-        graph.add(new BaseCoupling("H","I",8));
-        graph.add(new BaseCoupling("I","J",7));
-        graph.add(new BaseCoupling("H","K",9));
-        graph.add(new BaseCoupling("K","L",6));
-        graph.add(new BaseCoupling("G","M",1));
-        graph.add(new BaseCoupling("M","N",7));
-        graph.add(new BaseCoupling("N","O",5));
-        graph.add(new BaseCoupling("O","P",8));
-        graph.add(new BaseCoupling("M","Q",1));
-        graph.add(new BaseCoupling("Q","R",8));
-        graph.add(new BaseCoupling("R","S",7));
-        graph.add(new BaseCoupling("S","T",8));
+        graph.add(new BaseCoupling("A", "B", 7));
+        graph.add(new BaseCoupling("B", "C", 9));
+        graph.add(new BaseCoupling("C", "D", 6));
+        graph.add(new BaseCoupling("B", "E", 8));
+        graph.add(new BaseCoupling("E", "F", 7));
+        graph.add(new BaseCoupling("F", "G", 1));
+        graph.add(new BaseCoupling("G", "H", 7));
+        graph.add(new BaseCoupling("H", "I", 8));
+        graph.add(new BaseCoupling("I", "J", 7));
+        graph.add(new BaseCoupling("H", "K", 9));
+        graph.add(new BaseCoupling("K", "L", 6));
+        graph.add(new BaseCoupling("G", "M", 1));
+        graph.add(new BaseCoupling("M", "N", 7));
+        graph.add(new BaseCoupling("N", "O", 5));
+        graph.add(new BaseCoupling("O", "P", 8));
+        graph.add(new BaseCoupling("M", "Q", 1));
+        graph.add(new BaseCoupling("Q", "R", 8));
+        graph.add(new BaseCoupling("R", "S", 7));
+        graph.add(new BaseCoupling("S", "T", 8));
         return graph;
     }
 }

@@ -31,15 +31,14 @@ public class MetricsExportService {
     @Autowired
     private Configs configs;
 
-
     public String exportQualityMetrics() throws Exception {
         StringBuilder sb = new StringBuilder();
 
         List<EvaluationMetrics> metrics = decompositionMetricsRepository.findAll();
 
-        for(EvaluationMetrics metric: metrics){
-            Decomposition decomposition = decompositionRepository.findById(metric.getDecomposition().getId());
-            sb.append(createQualityMetricsRow(metric,decomposition,','));
+        for (EvaluationMetrics metric : metrics) {
+            Decomposition decomposition = decompositionRepository.findById(metric.getDecomposition().getId()).get();
+            sb.append(createQualityMetricsRow(metric, decomposition, ','));
             sb.append(newLine);
         }
 
@@ -48,9 +47,10 @@ public class MetricsExportService {
 
     public String exportLogicalCouplingPerformanceMetrics() throws Exception {
         List<Decomposition> decompositions = decompositionRepository.findAll().stream().filter(decomposition -> {
-                    return (decomposition.getParameters().isLogicalCoupling() &&
+            return (decomposition.getParameters().isLogicalCoupling() &&
                     !decomposition.getParameters().isContributorCoupling() &&
-                    !decomposition.getParameters().isSemanticCoupling());}).collect(Collectors.toList());
+                    !decomposition.getParameters().isSemanticCoupling());
+        }).collect(Collectors.toList());
 
         return createPerformanceTable(decompositions);
     }
@@ -61,9 +61,10 @@ public class MetricsExportService {
         List<Decomposition> decompositions = decompositionRepository.findAll().stream().filter(decomposition -> {
             return (!decomposition.getParameters().isLogicalCoupling() &&
                     !decomposition.getParameters().isContributorCoupling() &&
-                    decomposition.getParameters().isSemanticCoupling());}).collect(Collectors.toList());
+                    decomposition.getParameters().isSemanticCoupling());
+        }).collect(Collectors.toList());
 
-        for(Decomposition decomposition: decompositions){
+        for (Decomposition decomposition : decompositions) {
             EvaluationMetrics metrics = decompositionMetricsRepository.findByDecompositionId(decomposition.getId());
             String row = createSemanticCouplingPerformanceRow(decomposition, metrics, ',');
 
@@ -77,20 +78,21 @@ public class MetricsExportService {
         List<Decomposition> decompositions = decompositionRepository.findAll().stream().filter(decomposition -> {
             return (!decomposition.getParameters().isLogicalCoupling() &&
                     decomposition.getParameters().isContributorCoupling() &&
-                    !decomposition.getParameters().isSemanticCoupling());}).collect(Collectors.toList());
+                    !decomposition.getParameters().isSemanticCoupling());
+        }).collect(Collectors.toList());
 
         return createPerformanceTable(decompositions);
     }
 
-    private String createQualityMetricsRow(EvaluationMetrics metrics, Decomposition decomposition, char separator){
+    private String createQualityMetricsRow(EvaluationMetrics metrics, Decomposition decomposition, char separator) {
         StringBuilder sb = new StringBuilder();
         sb.append(decomposition.getRepository().getName());
         sb.append(separator);
-        sb.append(decomposition.getParameters().isLogicalCoupling() ? 'x':'o');
+        sb.append(decomposition.getParameters().isLogicalCoupling() ? 'x' : 'o');
         sb.append(separator);
-        sb.append(decomposition.getParameters().isContributorCoupling() ? 'x':'o');
+        sb.append(decomposition.getParameters().isContributorCoupling() ? 'x' : 'o');
         sb.append(separator);
-        sb.append(decomposition.getParameters().isSemanticCoupling() ? 'x':'o');
+        sb.append(decomposition.getParameters().isSemanticCoupling() ? 'x' : 'o');
         sb.append(separator);
         sb.append(metrics.getAverageClassNumber());
         sb.append(separator);
@@ -104,9 +106,9 @@ public class MetricsExportService {
         return sb.toString();
     }
 
-    private String createPerformanceTable(List<Decomposition> decompositions) throws Exception{
+    private String createPerformanceTable(List<Decomposition> decompositions) throws Exception {
         StringBuilder sb = new StringBuilder();
-        for(Decomposition decomposition : decompositions){
+        for (Decomposition decomposition : decompositions) {
             EvaluationMetrics metrics = decompositionMetricsRepository.findByDecompositionId(decomposition.getId());
             int historyLength = computeHistoryLengthInDays(decomposition.getRepository());
             int commitCount = computeCommitCount(decomposition.getRepository());
@@ -119,8 +121,8 @@ public class MetricsExportService {
         return sb.toString();
     }
 
-
-    private String createSemanticCouplingPerformanceRow(Decomposition decomposition, EvaluationMetrics metrics, char separator){
+    private String createSemanticCouplingPerformanceRow(Decomposition decomposition, EvaluationMetrics metrics,
+            char separator) {
         StringBuilder sb = new StringBuilder();
         sb.append(decomposition.getRepository().getName());
         sb.append(separator);
@@ -128,7 +130,8 @@ public class MetricsExportService {
         return sb.toString();
     }
 
-    private String createLogicalCouplingPerformanceRow(Decomposition decomposition, EvaluationMetrics metrics, int historyLength, int commitCount, char separator){
+    private String createLogicalCouplingPerformanceRow(Decomposition decomposition, EvaluationMetrics metrics,
+            int historyLength, int commitCount, char separator) {
         StringBuilder sb = new StringBuilder();
         sb.append(decomposition.getRepository().getName());
         sb.append(separator);
@@ -140,19 +143,18 @@ public class MetricsExportService {
         return sb.toString();
     }
 
-    private int computeHistoryLengthInDays(GitRepository repo) throws Exception{
+    private int computeHistoryLengthInDays(GitRepository repo) throws Exception {
         GitClient gitClient = new GitClient(repo, configs);
         List<RevCommit> log = gitClient.getCommitLog();
-        int startTime = log.get(log.size()-1).getCommitTime();
+        int startTime = log.get(log.size() - 1).getCommitTime();
         int endTime = log.get(0).getCommitTime();
         int historyLengthSeconds = endTime - startTime;
-        return historyLengthSeconds / (60*60*24);
+        return historyLengthSeconds / (60 * 60 * 24);
     }
 
-    private int computeCommitCount(GitRepository repo) throws Exception{
+    private int computeCommitCount(GitRepository repo) throws Exception {
         GitClient gitClient = new GitClient(repo, configs);
         return gitClient.getCommitLog().size();
     }
-
 
 }

@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
  */
 public class DecompositionController {
 
-
     @Autowired
     private RepositoryRepository repository;
 
@@ -40,29 +39,28 @@ public class DecompositionController {
     @Autowired
     private EvaluationService evaluationService;
 
-
     private Logger logger = LoggerFactory.getLogger(DecompositionController.class);
 
-
     @CrossOrigin
-    @RequestMapping(value="/repositories/{repoId}/decomposition", method=RequestMethod.POST)
-    public ResponseEntity<Set<GraphRepresentation>> decomposition(@PathVariable Long repoId, @RequestBody DecompositionParameters decompositionDTO){
+    @RequestMapping(value = "/repositories/{repoId}/decomposition", method = RequestMethod.POST)
+    public ResponseEntity<Set<GraphRepresentation>> decomposition(@PathVariable Long repoId,
+            @RequestBody DecompositionParameters decompositionDTO) {
         logger.info(decompositionDTO.toString());
 
-        //find repository to be decomposed
-        GitRepository repo = repository.findById(repoId);
+        // find repository to be decomposed
+        GitRepository repo = repository.findById(repoId).get();
 
-        //perform decomposition
-        Decomposition decomposition = decompositionService.decompose(repo,decompositionDTO);
+        // perform decomposition
+        Decomposition decomposition = decompositionService.decompose(repo, decompositionDTO);
 
         // convert to graph representation for frontend
-        Set<GraphRepresentation> graph = decomposition.getServices().stream().map(GraphRepresentation::from).collect(Collectors.toSet());
+        Set<GraphRepresentation> graph = decomposition.getServices().stream().map(GraphRepresentation::from)
+                .collect(Collectors.toSet());
 
         // Compute evaluation metrics
         evaluationService.performEvaluation(decomposition);
 
-        return new ResponseEntity<>(graph,HttpStatus.OK);
+        return new ResponseEntity<>(graph, HttpStatus.OK);
     }
-
 
 }

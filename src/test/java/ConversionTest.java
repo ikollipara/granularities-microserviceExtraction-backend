@@ -3,13 +3,11 @@ import ch.uzh.ifi.seal.monolith2microservices.conversion.GraphRepresentationConv
 import ch.uzh.ifi.seal.monolith2microservices.conversion.NodeRepresentation;
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.ClassNode;
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.Component;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Created by gmazlami on 12/20/16.
@@ -18,8 +16,8 @@ public class ConversionTest {
 
     private Set<Component> components;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    public void setUp() {
         components = new HashSet<>();
 
         Component component = new Component();
@@ -39,26 +37,28 @@ public class ConversionTest {
 
         components.add(component);
     }
-//
-//
-//    @Test
-//    public void testNodeLabel(){
-//        Set<NodeRepresentation> nodes = GraphRepresentationConverter.convertNodes(components);
-//
-//        nodes.forEach(node -> {
-//            System.out.println("Node label:   " + node.getLabel());
-//        });
-//        assertEquals(true, true);
-//    }
-//
-//
-//    @Test
-//    public void testEdges(){
-//        Set<EdgeRepresentation> edges =  GraphRepresentationConverter.convertEdges(components,GraphRepresentationConverter.convertNodes(components));
-//        edges.forEach(e -> {
-//            System.out.println(e);
-//        });
-//
-//        assertEquals(true,true);
-//    }
+    //
+    //
+    // @Test
+    // public void testNodeLabel(){
+    // Set<NodeRepresentation> nodes =
+    // GraphRepresentationConverter.convertNodes(components);
+    //
+    // nodes.forEach(node -> {
+    // System.out.println("Node label: " + node.getLabel());
+    // });
+    // assertEquals(true, true);
+    // }
+    //
+    //
+    // @Test
+    // public void testEdges(){
+    // Set<EdgeRepresentation> edges =
+    // GraphRepresentationConverter.convertEdges(components,GraphRepresentationConverter.convertNodes(components));
+    // edges.forEach(e -> {
+    // System.out.println(e);
+    // });
+    //
+    // assertEquals(true,true);
+    // }
 }

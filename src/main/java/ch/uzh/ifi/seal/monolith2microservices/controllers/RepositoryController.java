@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.monolith2microservices.controllers;
 
-
 import ch.uzh.ifi.seal.monolith2microservices.dtos.RepositoryDTO;
 import ch.uzh.ifi.seal.monolith2microservices.models.git.GitRepository;
 import ch.uzh.ifi.seal.monolith2microservices.persistence.RepositoryRepository;
@@ -18,37 +17,37 @@ import java.util.List;
 @RestController
 @Component
 public class RepositoryController {
-	
-	@Autowired
-	private RepositoryRepository repository;
-	
-	@Autowired
-	private GitCloneService gitCloneService;
 
-	@CrossOrigin
-    @RequestMapping(value="/repositories", method=RequestMethod.POST)
-    public GitRepository addRepository(@RequestBody RepositoryDTO repo) throws Exception{
-    	
-    	GitRepository r = new GitRepository();
-    	r.setName(repo.getName());
-    	r.setRemotePath(repo.getUri());
-    	
-    	GitRepository saved = repository.save(r);
-    	gitCloneService.processRepository(r);
-    	
-    	return saved;	
+    @Autowired
+    private RepositoryRepository repository;
+
+    @Autowired
+    private GitCloneService gitCloneService;
+
+    @CrossOrigin
+    @RequestMapping(value = "/repositories", method = RequestMethod.POST)
+    public GitRepository addRepository(@RequestBody RepositoryDTO repo) throws Exception {
+
+        GitRepository r = new GitRepository();
+        r.setName(repo.getName());
+        r.setRemotePath(repo.getUri());
+
+        GitRepository saved = repository.save(r);
+        gitCloneService.processRepository(r);
+
+        return saved;
     }
 
-	@CrossOrigin
-	@RequestMapping(value="/repositories", method=RequestMethod.GET)
-	public List<GitRepository> listRepositories() throws Exception{
-		return repository.findAll();
-	}
+    @CrossOrigin
+    @RequestMapping(value = "/repositories", method = RequestMethod.GET)
+    public List<GitRepository> listRepositories() throws Exception {
+        return repository.findAll();
+    }
 
-	@CrossOrigin
-	@RequestMapping(value="repositories/{repositoryId}", method=RequestMethod.GET)
-	public GitRepository getRepository(@PathVariable Long repositoryId){
-		return repository.findById(repositoryId);
-	}
-    
+    @CrossOrigin
+    @RequestMapping(value = "repositories/{repositoryId}", method = RequestMethod.GET)
+    public GitRepository getRepository(@PathVariable Long repositoryId) {
+        return repository.findById(repositoryId).get();
+    }
+
 }

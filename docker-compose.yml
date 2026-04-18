@@ -1,0 +1,12 @@
+services:
+  db:
+    platform: linux/amd64
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      PGPASSWORD: tingulli3
+      POSTGRES_DB: repositories
+      POSTGRES_USER: thesis
+      POSTGRES_PASSWORD: tingulli3
+      # POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"

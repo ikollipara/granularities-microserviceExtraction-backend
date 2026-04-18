@@ -1,14 +1,15 @@
 import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.semanticcoupling.tfidf.TfIdfWrapper;
 import com.google.common.collect.ImmutableSet;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by gmazlami on 12/6/16.
@@ -18,15 +19,13 @@ public class TfIdfTest {
 
     private Set<String> document1Terms = ImmutableSet.of(
             "to", "be", "or", "not", "to", "be",
-            "to be or", "be or not", "or not to", "not to be"
-    );
+            "to be or", "be or not", "or not to", "not to be");
 
     private Set<String> document2Terms = ImmutableSet.of(
             "or", "to", "jump",
-            "or to jump"
-    );
+            "or to jump");
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
     }
@@ -47,8 +46,7 @@ public class TfIdfTest {
         doc2.add("real");
         doc2.add("document");
 
-        assertEquals(1,1);
+        assertEquals(1, 1);
     }
-
 
 }

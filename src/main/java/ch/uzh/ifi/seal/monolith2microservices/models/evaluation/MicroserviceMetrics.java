@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.monolith2microservices.models.evaluation;
 
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Set;
 
 /**
@@ -21,7 +21,7 @@ public class MicroserviceMetrics {
 
     private int LOC;
 
-    @OneToOne(cascade={CascadeType.REMOVE})
+    @OneToOne(cascade = { CascadeType.REMOVE })
     private Component microservice;
 
     public long getId() {
@@ -32,31 +32,31 @@ public class MicroserviceMetrics {
         this.id = id;
     }
 
-    public MicroserviceMetrics(Component microservice){
+    public MicroserviceMetrics(Component microservice) {
         this.microservice = microservice;
     }
 
-    public void setContributors(Set<String> contributors){
+    public void setContributors(Set<String> contributors) {
         this.contributors = contributors;
     }
 
-    public void setSizeLoc(int size){
+    public void setSizeLoc(int size) {
         this.LOC = size;
     }
 
-    public Set<String> getContributors(){
+    public Set<String> getContributors() {
         return this.contributors;
     }
 
-    public double getNumOfContributors(){
+    public double getNumOfContributors() {
         return (double) this.contributors.size();
     }
 
-    public int getSizeInLoc(){
+    public int getSizeInLoc() {
         return this.LOC;
     }
 
-    public int getSizeInClasses(){
+    public int getSizeInClasses() {
         return this.microservice.getNodes().size();
     }
 }

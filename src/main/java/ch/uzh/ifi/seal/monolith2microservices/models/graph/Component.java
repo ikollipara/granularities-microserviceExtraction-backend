@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.monolith2microservices.models.graph;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,37 +18,37 @@ public class Component {
     @Id
     private Long id;
 
-    @OneToMany(cascade={CascadeType.REMOVE})
+    @OneToMany(cascade = { CascadeType.REMOVE })
     private List<ClassNode> nodes;
 
     @JsonIgnore
     @Transient
     private boolean visited;
 
-    public Component(){
+    public Component() {
         id = new Random().nextLong() % System.currentTimeMillis();
         nodes = new ArrayList<>();
         visited = false;
     }
 
-    public Long getId(){
+    public Long getId() {
         return this.id;
     }
 
-    public void addNode(ClassNode node){
+    public void addNode(ClassNode node) {
         nodes.add(node);
     }
 
-    public void setVisited(boolean value){
+    public void setVisited(boolean value) {
         this.visited = value;
     }
 
     @JsonIgnore
-    public boolean getVisited(){
+    public boolean getVisited() {
         return this.visited;
     }
 
-    public List<ClassNode> getNodes(){
+    public List<ClassNode> getNodes() {
         return this.nodes;
     }
 
@@ -57,9 +57,8 @@ public class Component {
         return this.nodes.size();
     }
 
-
     @JsonIgnore
-    public List<String> getFilePaths(){
+    public List<String> getFilePaths() {
         return this.nodes.stream().map(classNode -> classNode.getId()).collect(Collectors.toList());
     }
 
@@ -71,8 +70,10 @@ public class Component {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Component)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Component))
+            return false;
 
         Component component = (Component) o;
 

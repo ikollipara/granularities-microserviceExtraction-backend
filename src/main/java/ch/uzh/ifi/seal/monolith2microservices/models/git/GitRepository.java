@@ -1,55 +1,53 @@
 package ch.uzh.ifi.seal.monolith2microservices.models.git;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
-public class 	GitRepository {
+public class GitRepository {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	
-	private String remotePath;
-	
-	private String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	public Long getId() {
-		return id;
-	}
+    private String remotePath;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public String getRemotePath() {
-		return remotePath;
-	}
+    private String name;
 
-	public void setRemotePath(String remotePath) {
-		this.remotePath = remotePath;
-	}
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getRemotePath() {
+        return remotePath;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setRemotePath(String remotePath) {
+        this.remotePath = remotePath;
+    }
 
-	@Override
-	public String toString() {
-		return "Repository [id=" + id + ", remotePath=" + remotePath + ", name=" + name
-				+ "]";
-	}
+    public String getName() {
+        return name;
+    }
 
-	
-	public String getDirectoryName(){
-		return this.name + "_" + this.id;
-	}
-	
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Repository [id=" + id + ", remotePath=" + remotePath + ", name=" + name
+                + "]";
+    }
+
+    public String getDirectoryName() {
+        return this.name + "_" + this.id;
+    }
+
 }

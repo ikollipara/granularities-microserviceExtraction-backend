@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.monolith2microservices.models.evaluation;
 
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.Decomposition;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Created by gmazlami on 1/12/17.
@@ -15,7 +15,7 @@ public class EvaluationMetrics {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne(cascade={CascadeType.REMOVE})
+    @OneToOne(cascade = { CascadeType.REMOVE })
     private Decomposition decomposition;
 
     private double contributorsPerMicroservice;
@@ -32,11 +32,11 @@ public class EvaluationMetrics {
 
     private long executionTimeMillisClustering;
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 
-    public void setId(long id){
+    public void setId(long id) {
         this.id = id;
     }
 

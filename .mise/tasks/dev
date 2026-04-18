@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+#MISE description="Run the development"
+
+rm -rf repositories/
+docker compose down
+docker compose up -d
+mvn clean compile spring-boot:run

@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.monolith2microservices.models.DecompositionParameters;
 import ch.uzh.ifi.seal.monolith2microservices.models.git.ChangeEvent;
 import ch.uzh.ifi.seal.monolith2microservices.models.git.GitRepository;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Set;
 
@@ -19,13 +19,13 @@ public class Decomposition {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(cascade={CascadeType.REMOVE})
+    @OneToMany(cascade = { CascadeType.REMOVE })
     private Set<Component> services;
 
-    @OneToOne(cascade={CascadeType.REMOVE})
+    @OneToOne(cascade = { CascadeType.REMOVE })
     private GitRepository repository;
 
-    @OneToOne(cascade={CascadeType.REMOVE})
+    @OneToOne(cascade = { CascadeType.REMOVE })
     private DecompositionParameters parameters;
 
     @Transient
@@ -37,19 +37,19 @@ public class Decomposition {
     @Transient
     private List<ChangeEvent> history;
 
-    public Long getId(){
+    public Long getId() {
         return this.id;
     }
 
-    public void setParameters(DecompositionParameters params){
+    public void setParameters(DecompositionParameters params) {
         this.parameters = params;
     }
 
-    public DecompositionParameters getParameters(){
+    public DecompositionParameters getParameters() {
         return this.parameters;
     }
 
-    public void setComponents(Set<Component> services){
+    public void setComponents(Set<Component> services) {
         this.services = services;
     }
 
@@ -57,11 +57,11 @@ public class Decomposition {
         return this.services;
     }
 
-    public GitRepository getRepository(){
+    public GitRepository getRepository() {
         return this.repository;
     }
 
-    public void setRepository(GitRepository repo){
+    public void setRepository(GitRepository repo) {
         this.repository = repo;
     }
 
@@ -81,7 +81,7 @@ public class Decomposition {
         this.strategyTime = strategyTime;
     }
 
-    public void setHistory(List<ChangeEvent> history){
+    public void setHistory(List<ChangeEvent> history) {
         this.history = history;
     }
 
