@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.monolith2microservices.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ch.uzh.ifi.seal.monolith2microservices.models.evaluation.TreeSitterGranularity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,10 @@ public class DecompositionParameters {
 
     private boolean contributorCoupling;
 
+    private boolean useTreeSitter;
+
+    private TreeSitterGranularity granularity;
+
     private int numServices;
 
     private int intervalSeconds;
@@ -33,6 +38,22 @@ public class DecompositionParameters {
 
     public long getId() {
         return id;
+    }
+
+    public TreeSitterGranularity getGranularity() {
+        return granularity;
+    }
+
+    public void setGranularity(TreeSitterGranularity granularity) {
+        this.granularity = granularity;
+    }
+
+    public boolean isUsingTreeSitter() {
+        return useTreeSitter;
+    }
+
+    public void setTreeSitterUsage(boolean treeSitter) {
+        this.useTreeSitter = treeSitter;
     }
 
     public boolean isLogicalCoupling() {
