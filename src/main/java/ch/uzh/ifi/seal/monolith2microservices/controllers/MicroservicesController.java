@@ -37,35 +37,34 @@ public class MicroservicesController {
     @Autowired
     RepositoryRepository repositoryRepository;
 
-
     @CrossOrigin
-    @RequestMapping(value="/microservices/{decompositionId}", method= RequestMethod.GET)
-    public ResponseEntity<Set<GraphRepresentation>> getMicroservice(@PathVariable long decompositionId) throws Exception{
+    @RequestMapping(value = "/microservices/{decompositionId}", method = RequestMethod.GET)
+    public ResponseEntity<Set<GraphRepresentation>> getMicroservice(
+            @PathVariable("decompositionId") long decompositionId) throws Exception {
         Decomposition decomposition = decompositionRepository.findById(decompositionId);
-        Set<GraphRepresentation> graph = decomposition.getServices().stream().map(GraphRepresentation::from).collect(Collectors.toSet());
+        Set<GraphRepresentation> graph = decomposition.getServices().stream().map(GraphRepresentation::from)
+                .collect(Collectors.toSet());
         return new ResponseEntity<Set<GraphRepresentation>>(graph, HttpStatus.OK);
     }
 
-
     @CrossOrigin
     @RequestMapping(value = "/microservices", method = RequestMethod.GET)
-    public ResponseEntity<List<DecompositionDTO>> getMicroservices() throws Exception{
+    public ResponseEntity<List<DecompositionDTO>> getMicroservices() throws Exception {
         List<Decomposition> decompositions = decompositionRepository.findAll();
 
         List<DecompositionDTO> dtos = new ArrayList<>();
 
-        for(Decomposition d: decompositions){
+        for (Decomposition d : decompositions) {
             DecompositionDTO dto = new DecompositionDTO();
             dto.setDecompositionId(d.getId());
             dto.setRepo(d.getRepository());
             dto.setParameters(d.getParameters());
-            if(dto.getRepo() != null){
+            if (dto.getRepo() != null) {
                 dtos.add(dto);
             }
         }
 
         return new ResponseEntity<List<DecompositionDTO>>(dtos, HttpStatus.OK);
     }
-
 
 }

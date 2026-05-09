@@ -46,7 +46,7 @@ public class RepositoryController {
 
     @CrossOrigin
     @RequestMapping(value = "repositories/{repositoryId}", method = RequestMethod.GET)
-    public GitRepository getRepository(@PathVariable Long repositoryId) {
+    public GitRepository getRepository(@PathVariable("repositoryId") Long repositoryId) {
         return repository.findById(repositoryId).get();
     }
 

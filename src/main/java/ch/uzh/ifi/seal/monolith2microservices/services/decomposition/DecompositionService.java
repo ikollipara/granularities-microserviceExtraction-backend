@@ -16,8 +16,11 @@ import ch.uzh.ifi.seal.monolith2microservices.persistence.ComponentRepository;
 import ch.uzh.ifi.seal.monolith2microservices.persistence.DecompositionRepository;
 import ch.uzh.ifi.seal.monolith2microservices.persistence.ParametersRepository;
 import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.contributors.ContributorCouplingEngine;
+import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.contributors.TreeSitterContributorCouplingEngine;
 import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.logicalcoupling.LogicalCouplingEngine;
+import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.logicalcoupling.TreeSitterLogicalCouplingEngine;
 import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.semanticcoupling.SemanticCouplingEngine;
+import ch.uzh.ifi.seal.monolith2microservices.services.decomposition.semanticcoupling.TreeSitterSemanticCouplingEngine;
 import ch.uzh.ifi.seal.monolith2microservices.services.evaluation.MicroserviceEvaluationService;
 import ch.uzh.ifi.seal.monolith2microservices.services.git.HistoryService;
 import ch.uzh.ifi.seal.monolith2microservices.services.reporting.TextFileReport;
@@ -53,72 +56,110 @@ public class DecompositionService {
     ParametersRepository parametersRepository;
 
     @Autowired
-    HistoryService historyService;
+    public HistoryService historyService;
 
     @Autowired
     SemanticCouplingEngine semanticCouplingEngine;
 
     @Autowired
+    TreeSitterSemanticCouplingEngine tsSemanticCouplingEngine;
+
+    @Autowired
     LogicalCouplingEngine logicalCouplingEngine;
+
+    @Autowired
+    TreeSitterLogicalCouplingEngine tsLogicalCouplingEngine;
 
     @Autowired
     ContributorCouplingEngine contributorCouplingEngine;
 
     @Autowired
+    TreeSitterContributorCouplingEngine tsContributorCouplingEngine;
+
+    @Autowired
     MicroserviceEvaluationService microserviceEvaluationService;
 
-    public Decomposition decompose(GitRepository repository, DecompositionParameters parameters){
+    public Decomposition decompose(GitRepository repository, DecompositionParameters parameters) {
 
         try {
 
             List<ChangeEvent> history = computeHistory(repository);
 
             logger.info("DECOMPOSITION-------------------------");
-            logger.info("STRATEGIES: Logical Coupling: " + parameters.isLogicalCoupling() + " Semantic Coupling: " + parameters.isSemanticCoupling() + "  Contributor Coupling: " + parameters.isContributorCoupling());
-            logger.info("PARAMETERS: History Interval Size (s): " + parameters.getIntervalSeconds() + " Target Number of Services: " + parameters.getNumServices());
+            logger.info("TREESITTER: " + parameters.isUsingTreeSitter() + " Granularity: "
+                    + parameters.getGranularity().toString());
+            logger.info("STRATEGIES: Logical Coupling: " + parameters.isLogicalCoupling() + " Semantic Coupling: "
+                    + parameters.isSemanticCoupling() + "  Contributor Coupling: "
+                    + parameters.isContributorCoupling());
+            logger.info("PARAMETERS: History Interval Size (s): " + parameters.getIntervalSeconds()
+                    + " Target Number of Services: " + parameters.getNumServices());
 
             List<BaseCoupling> couplings = new ArrayList<>();
 
             long strategyStartTimestamp = System.currentTimeMillis();
 
-            if (parameters.isLogicalCoupling() && parameters.isSemanticCoupling() && parameters.isContributorCoupling()) {
+            if (parameters.isUsingTreeSitter()) {
+                var builder = LinearGraphCombination.create();
+                if (parameters.isLogicalCoupling())
+                    builder.withLogicalCouplings(
+                            tsLogicalCouplingEngine.computeCouplings(repository,
+                                    history, parameters.getIntervalSeconds(), parameters.getGranularity()));
+                if (parameters.isSemanticCoupling())
+                    builder.withSemanticCouplings(
+                            tsSemanticCouplingEngine.computeCouplings(repository, parameters.getGranularity()));
+                if (parameters.isContributorCoupling())
+                    builder.withContributorCouplings(tsContributorCouplingEngine.computerCouplings(
+                            repository, historyService.gitClient.getGitRepository(), history,
+                            parameters.getGranularity()));
+                couplings = builder.generate();
 
-                couplings = LinearGraphCombination.create().withLogicalCouplings(computeLogicalCouplings(history, parameters))
+            } else if (parameters.isLogicalCoupling() && parameters.isSemanticCoupling()
+                    && parameters.isContributorCoupling()) {
+
+                couplings = LinearGraphCombination.create()
+                        .withLogicalCouplings(computeLogicalCouplings(history, parameters))
                         .withSemanticCouplings(computeSemanticCouplings(repository))
                         .withContributorCouplings(computeContributorCouplings(history)).generate();
 
             } else if (parameters.isLogicalCoupling() && parameters.isSemanticCoupling()) {
 
-                couplings = LinearGraphCombination.create().withLogicalCouplings(computeLogicalCouplings(history, parameters))
+                couplings = LinearGraphCombination.create()
+                        .withLogicalCouplings(computeLogicalCouplings(history, parameters))
                         .withSemanticCouplings(computeSemanticCouplings(repository)).generate();
 
             } else if (parameters.isLogicalCoupling() && parameters.isContributorCoupling()) {
 
-                couplings = LinearGraphCombination.create().withLogicalCouplings(computeLogicalCouplings(history, parameters))
+                couplings = LinearGraphCombination.create()
+                        .withLogicalCouplings(computeLogicalCouplings(history, parameters))
                         .withContributorCouplings(computeContributorCouplings(history)).generate();
 
             } else if (parameters.isContributorCoupling() && parameters.isSemanticCoupling()) {
 
-                couplings = LinearGraphCombination.create().withContributorCouplings(computeContributorCouplings(history))
+                couplings = LinearGraphCombination.create()
+                        .withContributorCouplings(computeContributorCouplings(history))
                         .withSemanticCouplings(computeSemanticCouplings(repository)).generate();
 
             } else if (parameters.isLogicalCoupling()) {
 
-                couplings = LinearGraphCombination.create().withLogicalCouplings(computeLogicalCouplings(history, parameters)).generate();
+                couplings = LinearGraphCombination.create()
+                        .withLogicalCouplings(computeLogicalCouplings(history, parameters)).generate();
 
             } else if (parameters.isSemanticCoupling()) {
 
-                couplings = LinearGraphCombination.create().withSemanticCouplings(computeSemanticCouplings(repository)).generate();
+                couplings = LinearGraphCombination.create().withSemanticCouplings(computeSemanticCouplings(repository))
+                        .generate();
 
             } else if (parameters.isContributorCoupling()) {
-                couplings = LinearGraphCombination.create().withContributorCouplings(computeContributorCouplings(history)).generate();
+                couplings = LinearGraphCombination.create()
+                        .withContributorCouplings(computeContributorCouplings(history)).generate();
             }
 
             long strategyExecutionTimeMillis = System.currentTimeMillis() - strategyStartTimestamp;
 
             long clusteringStartTimestamp = System.currentTimeMillis();
-
-            Set<Component> components = MSTGraphClusterer.clusterWithSplit(couplings, parameters.getSizeThreshold(), parameters.getNumServices());
+            logger.info(couplings.toString());
+            Set<Component> components = MSTGraphClusterer.clusterWithSplit(couplings, parameters.getSizeThreshold(),
+                    parameters.getNumServices());
 
             long clusteringExecutionTimeMillis = System.currentTimeMillis() - clusteringStartTimestamp;
 
@@ -149,7 +190,7 @@ public class DecompositionService {
 
             return decomposition;
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
             Decomposition emptyDecomposition = new Decomposition();
@@ -159,20 +200,21 @@ public class DecompositionService {
         }
     }
 
-    private List<ChangeEvent> computeHistory(GitRepository repo) throws Exception{
+    private List<ChangeEvent> computeHistory(GitRepository repo) throws Exception {
         List<ChangeEvent> history = historyService.computeChangeEvents(repo);
         return historyService.cleanHistory(history);
     }
 
-    private List<ContributorCoupling> computeContributorCouplings(List<ChangeEvent> history) throws Exception{
+    private List<ContributorCoupling> computeContributorCouplings(List<ChangeEvent> history) throws Exception {
         return contributorCouplingEngine.computeCouplings(history);
     }
 
-    private List<SemanticCoupling> computeSemanticCouplings(GitRepository repository) throws IOException{
+    private List<SemanticCoupling> computeSemanticCouplings(GitRepository repository) throws IOException {
         return semanticCouplingEngine.computeCouplings(repository);
     }
 
-    private List<LogicalCoupling> computeLogicalCouplings(List<ChangeEvent> history, DecompositionParameters parameters) throws Exception{
+    private List<LogicalCoupling> computeLogicalCouplings(List<ChangeEvent> history, DecompositionParameters parameters)
+            throws Exception {
         return logicalCouplingEngine.computeCouplings(history, parameters.getIntervalSeconds());
     }
 

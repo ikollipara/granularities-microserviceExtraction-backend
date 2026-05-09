@@ -22,10 +22,10 @@ public class Decomposition {
     @OneToMany(cascade = { CascadeType.REMOVE })
     private Set<Component> services;
 
-    @OneToOne(cascade = { CascadeType.REMOVE })
+    @ManyToOne(cascade = { CascadeType.REMOVE })
     private GitRepository repository;
 
-    @OneToOne(cascade = { CascadeType.REMOVE })
+    @ManyToOne(cascade = { CascadeType.REMOVE })
     private DecompositionParameters parameters;
 
     @Transient

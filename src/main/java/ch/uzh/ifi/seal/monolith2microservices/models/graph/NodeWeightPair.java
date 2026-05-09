@@ -9,7 +9,7 @@ public class NodeWeightPair {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private ClassNode node;
 
     private double weight;

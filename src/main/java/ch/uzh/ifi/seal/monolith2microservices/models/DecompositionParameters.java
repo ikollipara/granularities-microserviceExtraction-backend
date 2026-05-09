@@ -26,7 +26,7 @@ public class DecompositionParameters {
 
     private boolean contributorCoupling;
 
-    private boolean useTreeSitter;
+    private boolean treeSitter;
 
     private TreeSitterGranularity granularity;
 
@@ -49,11 +49,11 @@ public class DecompositionParameters {
     }
 
     public boolean isUsingTreeSitter() {
-        return useTreeSitter;
+        return treeSitter;
     }
 
-    public void setTreeSitterUsage(boolean treeSitter) {
-        this.useTreeSitter = treeSitter;
+    public void setTreeSitter(boolean treeSitter) {
+        this.treeSitter = treeSitter;
     }
 
     public boolean isLogicalCoupling() {

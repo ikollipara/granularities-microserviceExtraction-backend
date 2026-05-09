@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class DecompositionController {
 
     @CrossOrigin
     @RequestMapping(value = "/repositories/{repoId}/decomposition", method = RequestMethod.POST)
-    public ResponseEntity<Set<GraphRepresentation>> decomposition(@PathVariable Long repoId,
+    public ResponseEntity<Set<GraphRepresentation>> decomposition(@PathVariable("repoId") Long repoId,
             @RequestBody DecompositionParameters decompositionDTO) {
         logger.info(decompositionDTO.toString());
 
@@ -58,7 +59,12 @@ public class DecompositionController {
                 .collect(Collectors.toSet());
 
         // Compute evaluation metrics
-        evaluationService.performEvaluation(decomposition);
+        try {
+            evaluationService.performEvaluation(decomposition,
+                    decompositionService.historyService.gitClient.getGitRepository());
+        } catch (IOException e) {
+            logger.error(e.toString());
+        }
 
         return new ResponseEntity<>(graph, HttpStatus.OK);
     }

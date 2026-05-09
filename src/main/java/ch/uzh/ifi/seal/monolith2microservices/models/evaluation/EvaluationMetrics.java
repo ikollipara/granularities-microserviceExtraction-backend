@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.monolith2microservices.models.evaluation;
 
 import ch.uzh.ifi.seal.monolith2microservices.models.graph.Decomposition;
-
+import ch.uzh.ifi.seal.monolith2microservices.utils.TreeSitter;
 import jakarta.persistence.*;
 
 /**
@@ -31,6 +31,8 @@ public class EvaluationMetrics {
     private long executionTimeMillisStrategy;
 
     private long executionTimeMillisClustering;
+
+    private TreeSitterGranularity granularity;
 
     public long getId() {
         return this.id;
@@ -104,6 +106,14 @@ public class EvaluationMetrics {
         this.executionTimeMillisClustering = executionTimeMillisClustering;
     }
 
+    public void setGranularity(TreeSitterGranularity granularity) {
+        this.granularity = granularity;
+    }
+
+    public TreeSitterGranularity getGranularity() {
+        return granularity;
+    }
+
     @Override
     public String toString() {
         return "EvaluationMetrics{" +
@@ -116,6 +126,7 @@ public class EvaluationMetrics {
                 ", similarity=" + similarity +
                 ", executionTimeMillisStrategy=" + executionTimeMillisStrategy +
                 ", executionTimeMillisClustering=" + executionTimeMillisClustering +
+                ", granularity=" + granularity.toString() +
                 '}';
     }
 }
